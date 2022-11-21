@@ -1,0 +1,28 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "</br>\r   <p align=\"center\">\r     <img src=\"https://img.shields.io/github/languages/count/Gareth-Kwan/\r employee-tracker?style=for-the-badge\"  />\r     <img src=\"https://img.shields.io/github/languages/top/Gareth-Kwan/\r employee-tracker?style=for-the-badge\"  />\r     <img src=\"https://img.shields.io/github/repo-size/Gareth-Kwan/\r employee-tracker?style=for-the-badge\"  />   \r     <img src=\"https://img.shields.io/tokei/lines/github/Gareth0201/\r employee-tracker?style=for-the-badge\"  />\r     <img src=\"https://img.shields.io/github/package-json/dependency-version/Gareth0201/employee-tracker/inquirer?style=for-the-badge\"/>\r     <img src=\"https://img.shields.io/github/last-commit/Gareth-Kwan/\r employee-tracker?style=for-the-badge\" />",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gareth-Kwan/employee-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gareth-Kwan/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/Gareth-Kwan/employee-tracker#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "inquirer": "^6.4.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3"
+  }
+}
