@@ -14,33 +14,190 @@ function runInquirer() {
         type: "list",
         message: "What would you like to do?",
         choices: [
-          "View all department",
-          "View all role",
-          "View all employees",
-          "View all employees by department",
-          "View all employees by manager",
-          "Add a department",
-          "Add a role",
-          "Add an employee",
-          "Update employee role",
-          "Update employee manager",
-          "Delete a department",
-          "Delete a role",
-          "Delete an employee",
+          "1. View all department",
+          "2. View all role",
+          "3. View all employees",
+          "4. View all employees by department",
+          "5. View all employees by manager",
+          "6. Add a department",
+          "7. Add a role",
+          "8. Add an employee",
+          "9. Update employee role",
+          "10. Update employee manager",
+          "11. Delete a department",
+          "12. Delete a role",
+          "13. Delete an employee",
         ],
       },
     ])
     .then(({ choice }) => {
       console.log(choice);
       switch (choice) {
-        case "View all department":
-          viewAllDepartment();
+        case "1. View all department":
+          viewAllDepartments();
           break;
-        case "View all role":
+        case "2. View all role":
           viewAllRoles();
           break;
-        case "View all employees":
-          viewAllRoles();
+        case "3. View all employees":
+          viewAllEmployees();
+          break;
+        case "4. View all employees by department":
+          viewAllEmployeesByDepartment();
+          break;
+        case "5. View all employees by manager":
+          viewAllEmployeesByManager();
+          break;
+        case "6. Add a department":
+          inquirer
+            .prompt([
+              {
+                name: "Department",
+                type: "input",
+                message: "Please enter the name of the department you would like to add.",
+                validate: (answer) => {
+                  if (answer !== "") {
+                    return true;
+                  }
+                  return "Please enter at least one character.";
+                },
+              },
+            ])
+            .then((answers) => {
+              addADepartment(answers.Department);
+              viewAllDepartments();
+              runInquirer();
+            });
+          break;
+        case "7. Add a role":
+          inquirer
+            .prompt([
+              {
+                name: "title",
+                type: "input",
+                message: "Please enter the title for this role.",
+                validate: (answer) => {
+                  if (answer !== "") {
+                    return true;
+                  }
+                  return "Please enter at least one character.";
+                },
+              },
+              {
+                name: "salary",
+                type: "input",
+                message: "Please enter the salary for this role.",
+              },
+              {
+                name: "department_id",
+                type: "input",
+                message: "Please enter the department id.",
+              },
+            ])
+            .then((answers) => {
+              addARole(answers.title, answers.salary, answers.department_id);
+              viewAllRoles();
+              runInquirer();
+            });
+          break;
+        case "8. Add an employee":
+          inquirer
+            .prompt([
+              {
+                name: "first_name",
+                type: "input",
+                message: "Please enter the employee's first name.",
+                validate: (answer) => {
+                  if (answer !== "") {
+                    return true;
+                  }
+                  return "Please enter at least one character.";
+                },
+              },
+              {
+                name: "last_name",
+                type: "input",
+                message: "Please enter the employee's last name.",
+                validate: (answer) => {
+                  if (answer !== "") {
+                    return true;
+                  }
+                  return "Please enter at least one character.";
+                },
+              },
+              {
+                name: "role",
+                type: "input",
+                message: "Please enter what role is the employee in.",
+              },
+              {
+                name: "manager",
+                type: "input",
+                message: "Please enter the employee ID that this employee reports to.",
+              },
+            ])
+            .then((answers) => {
+              addAnEmployee(answers.first_name, answers.last_name, answers.role, answers.manager);
+              runInquirer();
+            });
+          break;
+        case "9. Update employee role":
+          inquirer
+            .prompt([
+              {
+                name: "id",
+                type: "input",
+                message: "Please enter the id of the employee you wish to update.",
+              },
+              {
+                name: "role_id",
+                type: "input",
+                message: "Please enter the new role id of the employee.",
+              },
+            ])
+            .then((answers) => {
+              updateEmployeeRole(answers.id, answers.role_id);
+              runInquirer();
+            });
+          break;
+        case "10. Update employee manager":
+          inquirer
+            .prompt([
+              {
+                name: "employee_id",
+                type: "input",
+                message: "Please enter the id of the employee you wish to update.",
+              },
+              {
+                name: "manager_id",
+                type: "input",
+                message: "Please enter the updated manager id.",
+              },
+            ])
+            .then((answers) => {
+              updateEmployeeManager(answers.manager_id, answers.employee_id);
+              runInquirer();
+            });
+          break;
+        case "11. Delete a department":
+          inquirer
+            .prompt([
+              {
+                name: "department_id",
+                type: "input",
+                message: "Please enter id of the department you wish to delete.",
+              },
+            ])
+            .then((answers) => {
+              deleteADepartment(answers.department_id);
+              runInquirer();
+            });
+          break;
+        case "12. Delete a role":
+          deleteARole();
+          break;
+        case "13. Delete an employee":
+          deleteAnEmployee();
           break;
         default:
           runInquirer();
@@ -48,16 +205,16 @@ function runInquirer() {
       }
     });
 }
-
+//--------------------------------------------View Section---------------------------------------
 // View all departments
-function viewAllDepartment() {
-  console.log("view all deparments was selected");
+function viewAllDepartments() {
+  //Setting the query for SQL as a variable so I could call it later in the function below
   let results = connection.query(
     "SELECT * FROM department;",
 
-    function (error, department) {
+    function (error, results) {
       if (error) throw error;
-      console.table(department);
+      console.table(results);
       runInquirer();
     }
   );
@@ -75,8 +232,119 @@ function viewAllRoles() {
     }
   );
 }
+
 // View all employees
 function viewAllEmployees() {
+  let results = connection.query(
+    "SELECT * FROM employee;",
+
+    function (error, results) {
+      if (error) throw error;
+      console.table(results);
+      runInquirer();
+    }
+  );
+}
+
+// View all employees by department
+function viewAllEmployeesByDepartment() {
+  let results = connection.query(
+    "SELECT employee.id, employee.first_name, employee.last_name, department.name as department FROM employee JOIN role ON employee.role_id=role.id JOIN department ON role.department_id=department.id;",
+
+    function (error, results) {
+      if (error) throw error;
+      console.table(results);
+      runInquirer();
+    }
+  );
+}
+
+// View all employees by manager
+function viewAllEmployeesByManager() {
+  let results = connection.query(
+    "SELECT * FROM employee;",
+
+    function (error, results) {
+      if (error) throw error;
+      console.table(results);
+      runInquirer();
+    }
+  );
+}
+
+//--------------------------------------------Add Section---------------------------------------
+// Add a department
+function addADepartment(department) {
+  let results = connection.query(
+    "INSERT INTO department SET name = ?",
+    [department],
+
+    function (error, results) {
+      if (error) throw error;
+      return;
+    }
+  );
+}
+
+// Add a role
+function addARole(title, salary, department_id) {
+  let results = connection.query(
+    "INSERT INTO role SET title = ?, salary = ?, department_id = ?",
+    [title, salary, department_id],
+
+    function (error, results) {
+      if (error) throw error;
+      return;
+    }
+  );
+  viewAllRoles();
+}
+
+// Add an employee
+function addAnEmployee(first_name, last_name, role, manager) {
+  let results = connection.query(
+    "INSERT INTO employee SET first_name = ?, last_name = ?, role_id = ?, manager_id = ?",
+    [first_name, last_name, role, manager],
+
+    function (error, results) {
+      if (error) throw error;
+      return;
+    }
+  );
+}
+
+//--------------------------------------------Update Section---------------------------------------
+// Update employee role
+function updateEmployeeRole(role_id, id) {
+  let results = connection.query(
+    "UPDATE employee SET role_id = ? WHERE id = ?",
+    [role_id, id],
+
+    function (error, results) {
+      if (error) throw error;
+      // console.table(results);
+    }
+  );
+  viewAllEmployees();
+}
+
+// Update employee manager
+function updateEmployeeManager(manager_id, employee_id) {
+  let results = connection.query(
+    "UPDATE employee SET manager_id = ? WHERE id = ?",
+    [manager_id, employee_id],
+
+    function (error, results) {
+      if (error) throw error;
+      // console.table(results);
+    }
+  );
+  viewAllEmployees();
+}
+
+//--------------------------------------------Delete Section---------------------------------------
+// Delete a department
+function deleteADepartment() {
   let results = connection.query(
     "SELECT * FROM employee;",
 
@@ -87,4 +355,29 @@ function viewAllEmployees() {
   );
 }
 
+// Delete a role
+function deleteARole() {
+  let results = connection.query(
+    "SELECT * FROM employee;",
+
+    function (error, results) {
+      if (error) throw error;
+      console.table(results);
+    }
+  );
+}
+
+// Delete an employee
+function deleteAnEmployee() {
+  let results = connection.query(
+    "SELECT * FROM employee;",
+
+    function (error, results) {
+      if (error) throw error;
+      console.table(results);
+    }
+  );
+}
+
+//Invoking the Inquirer function
 runInquirer();

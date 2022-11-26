@@ -7,7 +7,7 @@ INSERT INTO department (id, name) VALUES
 (4, "Marketing");
 
 INSERT INTO Role (id, title, salary, department_id) VALUES
-(1, "Partner", 3000000, 1),
+(1, "Partner", 300000, 1),
 (2, "Lawyer", 120000, 1),
 (3, "Legal assistant", 55000, 1),
 (4, "Finance manager.", 110000, 2),
@@ -16,14 +16,14 @@ INSERT INTO Role (id, title, salary, department_id) VALUES
 (7, "Service desk analyst", 50000, 3),
 (8, "Marketing specialist", 60000, 4);
 
-INSERT INTO Employee (first_name, last_name, role_id) VALUES
-("Sebastian","Lane",1),
-("Jenson","Robertson",1),
-("Anastasia","Dickson",1),
-("Dane","Kane",2),
-("James","Rose",2),
-("Spencer ","Howard",3),
-("Harry","James",3),
-("Ronald","Bedard",3),
-("Gillian","Harder",4),
-("Helene","Lawson",4);
+INSERT INTO Employee (id, first_name, last_name, role_id, manager_id) VALUES
+(1, "Sebastian","Lane",1, NULL),
+(2, "Jenson","Robertson",2, 1),
+(3, "Anastasia","Dickson",3, 1),
+(4, "Dane","Kane",4, NULL),
+(5, "James","Rose",5, 4),
+(6, "Spencer ","Howard",6, NULL),
+(7, "Harry","James",7, NULL),
+(8, "Ronald","Bedard",7, NULL),
+(9, "Gillian","Harder",8, NULL),
+(10, "Helene","Lawson",8, NULL);
