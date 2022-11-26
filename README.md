@@ -22,7 +22,7 @@ This challenge encourages us to utilize the knowledge we leaned about SQL and to
 
 [GitHub Repository](https://github.com/Gareth-Kwan/employee-tracker)
 
-[Link to Google Drive video](https://gareth-note-taker.herokuapp.com/)
+[Link to Google Drive video](https://drive.google.com/file/d/1fxCjX3yR7ZYaxacXwyr3F2sHwVAcWdoF/view/)
 
 # Screenshots
 

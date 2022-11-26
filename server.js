@@ -138,6 +138,7 @@ function runInquirer() {
             ])
             .then((answers) => {
               addAnEmployee(answers.first_name, answers.last_name, answers.role, answers.manager);
+              viewAllEmployees();
               runInquirer();
             });
           break;
@@ -156,7 +157,8 @@ function runInquirer() {
               },
             ])
             .then((answers) => {
-              updateEmployeeRole(answers.id, answers.role_id);
+              updateEmployeeRole(answers.role_id, answers.id);
+              viewAllEmployees();
               runInquirer();
             });
           break;
@@ -176,6 +178,7 @@ function runInquirer() {
             ])
             .then((answers) => {
               updateEmployeeManager(answers.manager_id, answers.employee_id);
+              viewAllEmployees();
               runInquirer();
             });
           break;
@@ -190,14 +193,39 @@ function runInquirer() {
             ])
             .then((answers) => {
               deleteADepartment(answers.department_id);
+              viewAllDepartments();
               runInquirer();
             });
           break;
         case "12. Delete a role":
-          deleteARole();
+          inquirer
+            .prompt([
+              {
+                name: "role_id",
+                type: "input",
+                message: "Please enter id of the role you wish to delete.",
+              },
+            ])
+            .then((answers) => {
+              deleteARole(answers.role_id);
+              viewAllRoles();
+              runInquirer();
+            });
           break;
         case "13. Delete an employee":
-          deleteAnEmployee();
+          inquirer
+            .prompt([
+              {
+                name: "employee_id",
+                type: "input",
+                message: "Please enter id of the employee you wish to delete.",
+              },
+            ])
+            .then((answers) => {
+              deleteAnEmployee(answers.employee_id);
+              viewAllEmployees();
+              runInquirer();
+            });
           break;
         default:
           runInquirer();
@@ -262,7 +290,7 @@ function viewAllEmployeesByDepartment() {
 // View all employees by manager
 function viewAllEmployeesByManager() {
   let results = connection.query(
-    "SELECT * FROM employee;",
+    "SELECT employee.id, employee.first_name, employee.last_name, department.name, employee.manager_id as department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id WHERE manager_id;",
 
     function (error, results) {
       if (error) throw error;
@@ -297,7 +325,6 @@ function addARole(title, salary, department_id) {
       return;
     }
   );
-  viewAllRoles();
 }
 
 // Add an employee
@@ -322,10 +349,8 @@ function updateEmployeeRole(role_id, id) {
 
     function (error, results) {
       if (error) throw error;
-      // console.table(results);
     }
   );
-  viewAllEmployees();
 }
 
 // Update employee manager
@@ -336,45 +361,43 @@ function updateEmployeeManager(manager_id, employee_id) {
 
     function (error, results) {
       if (error) throw error;
-      // console.table(results);
     }
   );
-  viewAllEmployees();
 }
 
 //--------------------------------------------Delete Section---------------------------------------
 // Delete a department
-function deleteADepartment() {
+function deleteADepartment(id) {
   let results = connection.query(
-    "SELECT * FROM employee;",
+    "DELETE FROM department WHERE id = ?",
+    [id],
 
     function (error, results) {
       if (error) throw error;
-      console.table(results);
     }
   );
 }
 
 // Delete a role
-function deleteARole() {
+function deleteARole(id) {
   let results = connection.query(
-    "SELECT * FROM employee;",
+    "DELETE FROM role WHERE id = ?",
+    [id],
 
     function (error, results) {
       if (error) throw error;
-      console.table(results);
     }
   );
 }
 
 // Delete an employee
-function deleteAnEmployee() {
+function deleteAnEmployee(id) {
   let results = connection.query(
-    "SELECT * FROM employee;",
+    "DELETE FROM employee WHERE id = ?",
+    [id],
 
     function (error, results) {
       if (error) throw error;
-      console.table(results);
     }
   );
 }
